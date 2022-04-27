@@ -12,14 +12,17 @@ var mgo = db.getMongo()
  };
  function getStatsFor(db){
      var collectionNames = db.getCollectionNames(), stats = [];
+     var dbSize = db.stats()
      collectionNames.forEach(function (n) { stats.push(db.getCollection(n).stats()); });
      stats = stats.sort(function(a, b) { return b['size'] - a['size']; });
      for (var c in stats) { print(stats[c]['ns'] + ": " + getReadableFileSizeString(stats[c]['size']) + " (" + getReadableFileSizeString(stats[c]['storageSize']) + ")"); }
+     print ("================================================================================")
+     print ("Tamanho total: " + getReadableFileSizeString(dbSize['storageSize']) + " (" + getReadableFileSizeString(dbSize['dataSize']) + ")")
  }
  function getAllStats(){
 
  var dbName = 'DB_NAME';
  var db = mgo.getDB(dbName); print('\n    '+db+'\n'); getStatsFor(db)
-
- }
+ 
+  }
  getAllStats()
